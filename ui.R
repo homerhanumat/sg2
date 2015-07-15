@@ -26,6 +26,7 @@ fluidPage(
     ),
     conditionalPanel(
       condition = "output.state == 'simSetup'",
+      helpText("Select a method for simulation (see About Tab for details)."),
       radioButtons(inputId = "simMethod", "Simulation Method",
                    choices = c("row/col sums fixed" = "rcFix",
                                "row sums fixed" = "rFix",
@@ -33,20 +34,27 @@ fluidPage(
     ),
     conditionalPanel(
       condition = "output.state != 'tableSetup'",
+      helpText("How many simulations do you want the machine to perform at once?","
+               (Upper limit is 10000)"),
       numericInput(inputId = "numberSims", "Number of Simulations",
                    min = 1, max = simLimit, value = 1),
       actionButton(inputId = "sim", "Simulate Now"),
-      actionButton(inputId = "reset", "Start Over (Same Table)")
+      actionButton(inputId = "reset", "Reset (Same Table)")
     ),
     conditionalPanel(
       condition = "output.state != 'tableSetup'",
       actionButton(inputId = "newTable", "Make New Table")
-    )
-  ),
+    ),
+  width = 2),
   mainPanel(
     conditionalPanel(
       condition = "input.submitTable == 0 || output.state == 'tableSetup'",
-      rHandsontableOutput("cross")
+      HTML(paste0("<h3>Enter your two-way table</h3>",
+                   "<p>You use the table below (see the About Tab for a description),",
+                   " or you can enter your own table usng the input widgets on the ",
+                   "sideboard.</p><hr>")),
+      rHandsontableOutput("cross", height = 160),
+      HTML("<hr><p>When you are ready, press the button to submit your table.</p>")
     ),
     conditionalPanel(
       condition = "output.state == 'simSetup'",
@@ -56,11 +64,11 @@ fluidPage(
                h5("Observed"),
                tableOutput("obsTable")
         ),
-        column(3,
+        column(3, offset = 1,
                h5("Expected by Null"),
                tableOutput("expTable")
         ),
-        column(3,offset=1,
+        column(4,offset=1,
                h5("Contributions"),
                tableOutput("contrTable")
         )
