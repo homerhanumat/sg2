@@ -103,6 +103,7 @@ shinyServer(function(input, output, session) {
   outputOptions(output, "state", suspendWhenHidden = FALSE)
   
   output$cross <- renderRHandsontable({
+    input$newTable # for the dependency
     rows <- input$rows
     cols <- input$cols
     rowNames <- rv$rowNames
@@ -175,11 +176,14 @@ shinyServer(function(input, output, session) {
     obschisq <- chisqStat(rv$DF)
     rounded1 <- round(obschisq,2)
     rounded2 <- round(chisqSims[length(chisqSims)],2)
-    paste("Observed chi-square statistic =  ",as.character(rounded1),
-          ", Latest resampled chi-square = ",as.character(rounded2),sep="")
+    paste("Observed chi-square =  ",as.character(rounded1),
+          ",\n Last resampled chi-square = ",as.character(rounded2),sep="")
   })
   
   output$mosaicLatest <- renderPlot({
+    expTitle <- ifelse(input$simMethod == "nFix",
+                        "Expected Table",
+                        "Expected Table\n(from simulation)")
     if( ! is.null(rv$latestTable) ) { # for the dependency
       latest_table <- rv$latestTable
       latest_table <- as.matrix(latest_table)
@@ -188,7 +192,7 @@ shinyServer(function(input, output, session) {
       if (input$barmosLatest == "mosaic") {
         mosaicplot(t(latest_table),col="blue",main="Simulated Table",
                   cex.axis=1.3)
-        mosaicplot(t(expected),col="grey",main="Expected Table",
+        mosaicplot(t(expected),col="grey",main = expTitle,
                   cex.axis=1.3)
       } else {
         barplot(t(latest_table), beside = TRUE,
@@ -196,7 +200,7 @@ shinyServer(function(input, output, session) {
                 main = "Simulated Table")
         barplot(t(expected), beside = TRUE,
                 legend.text = names(rv$DF), cex.axis = 1.3,
-                main = "Expected Table")
+                main = expTitle)
         }
       par(mfrow=c(1,1))
     }
@@ -273,7 +277,7 @@ shinyServer(function(input, output, session) {
   output$remarksProbDensity <- renderText({
     obs <- chisqStat(rv$DF)
     paste0("The curve above approximates the true probability distribution of the chi-square statistic.",
-           " It is based on our resamples so far.  The percentage in the table gives the approximate",
+           " It is based on our resamples so far.  The percentage in the table gives the approximate ",
            "probability, based on our resamples so far, of getting a chi-square statistic of ",
            round(obs,2)," or more, if the Null Hypothesis (no relationship between the two factor",
            " variables under study) is true. The more resamples you take the better these",

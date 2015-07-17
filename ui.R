@@ -58,11 +58,18 @@ fluidPage(
     ),
     conditionalPanel(
       condition = "output.state == 'simSetup'",
-      radioButtons(inputId = "barmosInit", 
+      fluidRow(
+        column(4,
+               radioButtons(inputId = "barmosInit", 
                    label = "Graph Type:",
                    choices = c("Bar Chart" = "bar",
-                                                       "Mosaic Plot" = "mosaic"),
-                   selected = "bar", inline = TRUE),
+                                "Mosaic Plot" = "mosaic"),
+                   selected = "bar", inline = TRUE)
+               ),
+        column(6,
+               h5(textOutput("remarksInitial"))
+               )
+      ),
       plotOutput("mosaicInitial", height = 350),
       fluidRow(
         column(3,
@@ -77,20 +84,25 @@ fluidPage(
                h5("Contributions"),
                tableOutput("contrTable")
         )
-      ),
-      hr(),
-      h5(textOutput("remarksInitial"))
+      )
     ),
     conditionalPanel(
       condition = "output.state == 'simulating'",
       tabsetPanel(
         tabPanel(
           title = "Latest Simulation",
-          radioButtons(inputId = "barmosLatest", 
+          fluidRow(
+          column(4,
+                 radioButtons(inputId = "barmosLatest", 
                        label = "Graph Type:",
                        choices = c("Bar Chart" = "bar",
                                    "Mosaic Plot" = "mosaic"),
-                       selected = "bar", inline = TRUE),
+                       selected = "bar", inline = TRUE)
+                 ),
+          column(6,
+                 p(textOutput("remarksLatest1"))
+                 )
+          ),
           plotOutput("mosaicLatest", height = 350),
           fluidRow(
             column(4,
@@ -102,7 +114,6 @@ fluidPage(
                   tableOutput("latestExpTable")
             )
           ),
-          p(textOutput("remarksLatest1")),
           tableOutput("summary1"),
           p(textOutput("remarksProbBar"))
         ),
@@ -131,7 +142,8 @@ fluidPage(
 )
 ),# end tabPanel "The Test"
 tabPanel(
-  title = "About"
+  title = "About",
+  includeHTML("informationFiles/about.html")
 )
 
 ) #nd navbarPage
