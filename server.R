@@ -148,10 +148,20 @@ shinyServer(function(input, output, session) {
   
   output$mosaicInitial <- renderPlot({
     observed <- rv$DF
-    par(mfrow=c(1,2))
-    mosaicplot(t(observed),col="orange",main="Observed Table",cex.axis=1.3)
+    obsMat <- as.matrix(rv$DF)
     expected <- expCounts(observed)
-    mosaicplot(t(expected),col="grey",main="Expected Table",cex.axis=1.3)
+    par(mfrow=c(1,2))
+    if (input$barmosInit == "mosaic") {
+      mosaicplot(t(observed),col="orange",main="Observed Table",cex.axis=1.3)
+      mosaicplot(t(expected),col="grey",main="Expected Table",cex.axis=1.3)
+    } else {
+        barplot(t(obsMat), beside = TRUE,
+                legend.text = names(observed), cex.axis = 1.3,
+                main = "Observed Table")
+        barplot(t(expected), beside = TRUE,
+                legend.text = names(observed), cex.axis = 1.3,
+                main = "Expected Table")
+      }
     par(mfrow=c(1,1))
   })
   
@@ -172,13 +182,22 @@ shinyServer(function(input, output, session) {
   output$mosaicLatest <- renderPlot({
     if( ! is.null(rv$latestTable) ) { # for the dependency
       latest_table <- rv$latestTable
-      par(mfrow=c(1,2))
       latest_table <- as.matrix(latest_table)
-      mosaicplot(t(latest_table),col="blue",main="Simulated Table",
-                 cex.axis=1.3)
       expected <- expCounts(latest_table)
-      mosaicplot(t(expected),col="grey",main="Expected Table\n(from simulation)",
-                 cex.axis=1.3)
+      par(mfrow=c(1,2))
+      if (input$barmosLatest == "mosaic") {
+        mosaicplot(t(latest_table),col="blue",main="Simulated Table",
+                  cex.axis=1.3)
+        mosaicplot(t(expected),col="grey",main="Expected Table",
+                  cex.axis=1.3)
+      } else {
+        barplot(t(latest_table), beside = TRUE,
+                legend.text = names(rv$DF), cex.axis = 1.3,
+                main = "Simulated Table")
+        barplot(t(expected), beside = TRUE,
+                legend.text = names(rv$DF), cex.axis = 1.3,
+                main = "Expected Table")
+        }
       par(mfrow=c(1,1))
     }
   })

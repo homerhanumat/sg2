@@ -58,6 +58,11 @@ fluidPage(
     ),
     conditionalPanel(
       condition = "output.state == 'simSetup'",
+      radioButtons(inputId = "barmosInit", 
+                   label = "Graph Type:",
+                   choices = c("Bar Chart" = "bar",
+                                                       "Mosaic Plot" = "mosaic"),
+                   selected = "bar", inline = TRUE),
       plotOutput("mosaicInitial", height = 350),
       fluidRow(
         column(3,
@@ -81,6 +86,11 @@ fluidPage(
       tabsetPanel(
         tabPanel(
           title = "Latest Simulation",
+          radioButtons(inputId = "barmosLatest", 
+                       label = "Graph Type:",
+                       choices = c("Bar Chart" = "bar",
+                                   "Mosaic Plot" = "mosaic"),
+                       selected = "bar", inline = TRUE),
           plotOutput("mosaicLatest", height = 350),
           fluidRow(
             column(4,
