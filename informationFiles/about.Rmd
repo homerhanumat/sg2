@@ -2,7 +2,9 @@
 title: "About this Application"
 author: "Homer White"
 date: "July 17, 2015"
-output: html_document
+output:
+  html_document:
+    theme: null
 ---
 
 ```{r include = FALSE}
@@ -18,6 +20,8 @@ This application introduces students to concepts in inferential statistics, in t
 
 The app opens with a contingency table drawn from L. Mann's 1981 study *The baiting crowd in episodes of threatened suicide*, published in Volume 41 of the **Journal of Personality and Social Psychology** (pages 703-709).  Mann was interested in factors that affect the behavior of the crowds that gather when a suicidal person is threatening to jump from a ledge or other high structure.  For 21 such incidents in Great Britain, Mann was able to gather information as to the weather at the time of the incident (classified as **warm** or **cool** based on the month in which the incident occurred) and the behavior of the crowd (either **polite** or **baiting** the would-be jumper).  The result was our default table:
 
+<hr>
+
 ```{r echo = FALSE}
 wcb <- matrix(c(2,8,7,4), nrow = 2)
 rownames(wcb) <- c("cool", "warm")
@@ -25,6 +29,7 @@ colnames(wcb) <- c("baiting", "polite")
 kable(wcb)
 ```
 
+<hr>
 
 Of course you can ignore the default table and enter any contingency table that you like, up to a limit of five rows and five columns.  The larger the number of rows (resp. columns), the shorter your row names (resp. column names) should be if you want graphs and summary tables to look good.
 
@@ -57,10 +62,12 @@ $$\hat{p} = \frac{10}{21}.$$
 
 From this one can compute an two-way table that a believer in the Null Hypothesis would expect to see:
 
+<hr>
 row/col | baiting | polite
 --- | --- | ---
 cool | $\frac{9 \times 10}{21} = 4.286$ | $\frac{9 \times 11}{21} = 4.714$
 warm | $\frac{12 \times 10}{21} = 5.714$ | $\frac{12 \times 11}{21} = 6.286$
+<hr>
 
 Note that this reduces to the table expected counts that is used in the computation of the $\chi^2$-statistic.
 
@@ -77,13 +84,16 @@ There is a long-standing debate about as to which method --- row-fixed or row/co
 
 This option might make sense to students in a situation where in the original data neither the row nor the column sums were fixed in advance.  Such a situation might occur when one is sampling randomly form a population and recording the values of two factor variables.  Fro example, consider the results of a survey on sex and seating preference at a small liberal arts college:
 
+<hr>
+
 ```{r echo = FALSE}
 sexSeat <- matrix(c(19,8,16,16,5,7), nrow = 2)
 rownames(sexSeat) <- c("female", "male")
-colnames(sexSeat) <- c("front","middle","back")
+colnames(sexSeat) <- c("front","mid","back")
 kable(sexSeat)
 ```
 
+<hr>
 If you regard the sample as having been drawn randomly from some larger population,then neither the number of females and males in the study nor the number of people preferring each seating position are fixed in advance.  Hence it might make sense for beginning students to re-sample in such a way that neither row nor column totals of randomly-generated tables are fixed, but rather the cell counts are a a multinomial random variable with size equal to the observe grand total and probabilities determined by the proportion of counts observed in each cell.  The "neither fixed" re-sampling option implements this idea.  (Again, expected cunts are computed afresh with each randomly-generated table).
 
 For large sample sizes, all three methods amount to the same thing (and deliver the same results as using a chi-square curve with degrees of freedom computed in the usual way).  For small sample sizes, there is some indication that the "neither fixed" option is lacking somewhat in power in comparison to the standard "row/col fixed"method.  Again, we provide the option only in classes where students want naive re-sampling schemes that correspond closely to the way that they believe chance variation figured into the collection of the original data.
